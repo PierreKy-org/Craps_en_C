@@ -6,5 +6,7 @@ struct Joueur {
 	int en_train_de_jouer;
 	int choix;
 };
-
-void etape1(Joueur* ListeJoueur);
+int lanceD();
+void miser(Joueur* ListeJoueur);
+void verifD(Joueur* ListeJoueur, int lance, int mise);
+int choisir(Joueur* ListeJoueur);

@@ -10,6 +10,7 @@ typedef struct De de;
 
 int main(void)
 {
+	Joueur* ListeJoueur;
 	int nb_joueur = 1;
 	int fin = 0;
 	while (!fin)
@@ -26,17 +27,28 @@ int main(void)
 		switch (c)
 		{
 		case '1':
-			printf("Entrez votre nom : ");
-			Joueur* ListeJoueur;
+			ListeJoueur = (Joueur*)malloc(6 * sizeof(Joueur));
 			Joueur* j1;
 			j1 = (Joueur*)malloc(sizeof(Joueur));
+			printf("Entrez votre nom : ");
 			scanf("%s", j1->nom);
 			j1->argent = 1000;
-			ListeJoueur = (Joueur*)malloc(nb_joueur * sizeof(Joueur));
 			ListeJoueur[0] = *j1;
-			printf("Une nouvelle partie vient de démarrer %s ! \n\n", ListeJoueur[0].nom);
-			etape1(ListeJoueur);
+			for (int i = 1; i < 6; i++) {
+				Joueur* ordi;
+				ordi = (Joueur*)malloc(sizeof(Joueur));
+				scanf("%s", ordi->nom);
+				ListeJoueur[i] = *ordi;
+			}
+			printf("Une nouvelle partie vient de demarrer %s ! \n\n", ListeJoueur[0].nom);
+			printf("Vous jouez avec %s, %s, %s, %s et %s.\n\n", ListeJoueur[1].nom, ListeJoueur[2].nom, ListeJoueur[3].nom, ListeJoueur[4].nom, ListeJoueur[5].nom);
+			miser(ListeJoueur);
+			int lance = lanceD();
+			verifD(ListeJoueur, lance, ListeJoueur[0].mise);
+			printf("T'as %d d'argent\n", ListeJoueur[0].argent);
 			system("pause");
+			fin = 1;
+			break;
 
 		case '2':
 			printf("Multijoueur\n\n");
