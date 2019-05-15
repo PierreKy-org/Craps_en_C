@@ -3,13 +3,16 @@
 #include<stdlib.h>
 #include <time.h>
 #include<math.h>
+#include<string.h>
 #include "craps.h"
 
 typedef struct Joueur Joueur;
-typedef struct De de;
+
 
 int main(void)
 {
+	srand(time(NULL));
+	char NomOrdi[12][30] = { "Etienne", "Philippe", "Edouard", "Carole", "Emilie", "Lea", "Andrea", "Gregory", "Alizee", "Julie", "Michel", "Michelle" };
 	Joueur* ListeJoueur;
 	int nb_joueur = 1;
 	int fin = 0;
@@ -37,8 +40,10 @@ int main(void)
 			for (int i = 1; i < 6; i++) {
 				Joueur* ordi;
 				ordi = (Joueur*)malloc(sizeof(Joueur));
-				scanf("%s", ordi->nom);
+				int ale = rand() % 12;
+				strcpy(ordi->nom, NomOrdi[ale]);
 				ListeJoueur[i] = *ordi;
+				ListeJoueur[i].argent = 1000;
 			}
 			printf("Une nouvelle partie vient de demarrer %s ! \n\n", ListeJoueur[0].nom);
 			printf("Vous jouez avec %s, %s, %s, %s et %s.\n\n", ListeJoueur[1].nom, ListeJoueur[2].nom, ListeJoueur[3].nom, ListeJoueur[4].nom, ListeJoueur[5].nom);
