@@ -38,7 +38,8 @@ int main(void)
 			j1->argent = 1000;
 			j1->mise = 0;
 			ListeJoueur[0] = *j1;
-			for (int i = 1; i < 6; i++) {
+			int i = 1;
+			for (i; i < 6; i++) {
 				Joueur* ordi;
 				ordi = (Joueur*)malloc(sizeof(Joueur));
 				int ale = rand() % 12;
@@ -57,14 +58,15 @@ int main(void)
 			while (getchar()!='\n');
 			printf("Il y a donc %d joueurs dans cette partie\n\n", nb_joueur);
 			ListeJoueur = (Joueur*)malloc(nb_joueur * sizeof(Joueur));
-			for (int i = 0; i < nb_joueur; i++) {
+			int j = 0;
+			for (j; j < nb_joueur; j++) {
 				Joueur* j1;
 				j1 = (Joueur*)malloc(sizeof(Joueur));
-				printf("Entrez le nom du joueur %d: ", (i+1));
+				printf("Entrez le nom du joueur %d: ", (j+1));
 				scanf("%s", j1->nom);
 				j1->argent = 1000;
 				j1->mise = 0;
-				ListeJoueur[i] = *j1;
+				ListeJoueur[j] = *j1;
 			}
 			etape1(ListeJoueur, 2, nb_joueur);
 			break;
