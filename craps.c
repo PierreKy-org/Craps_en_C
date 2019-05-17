@@ -4,12 +4,11 @@
 #include<math.h>
 #include<string.h>
 #include"craps.h"
-void montre_argent(Joueur* ListeJoueur) {
-	printf("T'as %d d'argent\n", ListeJoueur[0].argent);
-	int i = 1;
-	for (i; i < 6; i++) {
-		printf("#%s a %d d'argent\n", ListeJoueur[i].nom, ListeJoueur[i].argent);
-	}
+void montre_argent(Joueur* ListeJoueur, int mode_jeu, int nb_joueur) {
+		int j = 0;
+		for (j;j < nb_joueur;j++) {
+			printf("%s, vous avez %d d'argent\n", ListeJoueur[j].nom, ListeJoueur[j].argent);
+		}
 }
 int lanceD() {
 	srand(time(NULL));
@@ -21,7 +20,7 @@ int lanceD() {
 	printf("#Vous avez donc fait un %d ! #\n#############################\n\n", sommeD);
 	return sommeD;
 }
-int verifD(Joueur* ListeJoueur, int lance) {
+int verifD(Joueur* ListeJoueur, int lance, int mode_jeu, int nb_joueur) {
 	if (lance == 7) {
 		int i = 0;
 		for (i; i < 6; i++) {
@@ -31,7 +30,7 @@ int verifD(Joueur* ListeJoueur, int lance) {
 			}
 			ListeJoueur[i].mise = 0;
 		}
-		if (continuer() == 1) {
+		if (continuer(mode_jeu) == 1) {
 			return 1;
 		}
 		else {
@@ -47,7 +46,7 @@ int verifD(Joueur* ListeJoueur, int lance) {
 			}
 			ListeJoueur[j].mise = 0;
 		}
-		if (continuer() == 1) {
+		if (continuer(mode_jeu) == 1) {
 			return 1;
 		}
 		else {
@@ -61,7 +60,7 @@ int verifD(Joueur* ListeJoueur, int lance) {
 				ListeJoueur[w].mise = 0;
 			}
 		}
-		if (continuer() == 1) {
+		if (continuer(mode_jeu) == 1) {
 			return 1;
 		}
 		else {
@@ -73,7 +72,7 @@ int verifD(Joueur* ListeJoueur, int lance) {
 		point = malloc(sizeof(int));
 		*point = lance;
 		printf("Le point est %d !\nL'etape 2 demarre!\n", *point);
-		if (etape2(ListeJoueur, point) == 0) {
+		if (etape2(ListeJoueur, point, mode_jeu, nb_joueur) == 0) {
 			return 0;
 		}
 		else {
@@ -177,57 +176,95 @@ void etape1(Joueur* ListeJoueur, int mode_jeu, int nb_joueur){
 		}
 		miser(ListeJoueur, mode_jeu,nb_joueur);
 		int lance = lanceD();
-		encore = verifD(ListeJoueur, lance);
-		montre_argent(ListeJoueur);
+		encore = verifD(ListeJoueur, lance, mode_jeu, nb_joueur);
+		montre_argent(ListeJoueur, mode_jeu, nb_joueur);
 	}
 }
-void misedeux(Joueur* ListeJoueur) {
+void misedeux(Joueur* ListeJoueur, int mode_jeu, int nb_joueur) {
 	int valide = 0;
 	while (valide == 0) {
-		if (ListeJoueur[0].choix == 1) {
-			int up_mise;
-			printf("De combien voulez-vous augmenter la mise sur Pass ?\n\n");
-			scanf("%d", &up_mise);
-			if (up_mise > ListeJoueur[0].argent) {
-				printf("Vous ne pouvez pas miser plus que votre argent !\n\n");
-			}
-			else {
-				ListeJoueur[0].argent -= up_mise;
-				ListeJoueur[0].mise += up_mise;
-				printf("\n#Vous avez mise %d \n", ListeJoueur[0].mise);
-				valide = 1;
-			}
+		if (mode_jeu == 2) {
+			int j = 0;
+			for (j;j < nb_joueur; j++) {
+				printf("%s, ", ListeJoueur[j].nom);
+				if (ListeJoueur[j].choix == 1) {
+					int up_mise;
+					printf("de combien voulez-vous augmenter la mise sur Pass ?\n\n");
+					scanf("%d", &up_mise);
+					if (up_mise > ListeJoueur[j].argent) {
+						printf("Vous ne pouvez pas miser plus que votre argent !\n\n");
+					}
+					else {
+						ListeJoueur[j].argent -= up_mise;
+						ListeJoueur[j].mise += up_mise;
+						printf("\n#Vous avez mise %d \n", ListeJoueur[j].mise);
+						valide = 1;
+					}
 
+				}
+				else {
+					int down_mise;
+					printf("De combien voulez-vous diminuer la mise sur Don't Pass ?\n\n");
+					scanf("%d", &down_mise);
+					if (down_mise > ListeJoueur[j].mise) {
+						printf("Vous ne pouvez pas enlever plus que votre mise !\n\n");
+					}
+					else {
+						ListeJoueur[j].argent += down_mise;
+						ListeJoueur[j].mise -= down_mise;
+						printf("\n#Vous avez mise %d \n", ListeJoueur[j].mise);
+						valide = 1;
+					}
+				}
+			}
 		}
-		else {
-			int down_mise;
-			printf("De combien voulez-vous diminuer la mise sur Don't Pass ?\n\n");
-			scanf("%d", &down_mise);
-			if (down_mise > ListeJoueur[0].mise) {
-				printf("Vous ne pouvez pas enlever plus que votre mise !\n\n");
+		if (mode_jeu == 1) {
+			if (ListeJoueur[0].choix == 1) {
+				int up_mise;
+				printf("de combien voulez-vous augmenter la mise sur Pass ?\n\n");
+				scanf("%d", &up_mise);
+				if (up_mise > ListeJoueur[0].argent) {
+					printf("Vous ne pouvez pas miser plus que votre argent !\n\n");
+				}
+				else {
+					ListeJoueur[0].argent -= up_mise;
+					ListeJoueur[0].mise += up_mise;
+					printf("\n#Vous avez mise %d \n", ListeJoueur[0].mise);
+					valide = 1;
+				}
+
 			}
 			else {
-				printf("\n#Vous avez mise %d \n", ListeJoueur[0].mise);
-				ListeJoueur[0].argent += down_mise;
-				ListeJoueur[0].mise -= down_mise;
-				valide = 1;
+				int down_mise;
+				printf("De combien voulez-vous diminuer la mise sur Don't Pass ?\n\n");
+				scanf("%d", &down_mise);
+				if (down_mise > ListeJoueur[0].mise) {
+					printf("Vous ne pouvez pas enlever plus que votre mise !\n\n");
+				}
+				else {
+					ListeJoueur[0].argent += down_mise;
+					ListeJoueur[0].mise -= down_mise;
+					printf("\n#Vous avez mise %d \n", ListeJoueur[0].mise);
+					valide = 1;
+				}
 			}
 		}
 	}
-	int i = 1;
-	for (i; i < 6;i++) {
-		if (ListeJoueur[i].choix == 1) {
-			ListeJoueur[i].mise += rand() % ListeJoueur[i].argent;
-		}
-		else {
-			int down_bot = rand() % ListeJoueur[i].argent;
-			ListeJoueur[i].mise -= down_bot;
-			ListeJoueur[i].argent += down_bot;
-
+	if (mode_jeu == 1){
+		int i = 1;
+		for (i; i < 6;i++) {
+			if (ListeJoueur[i].choix == 1) {
+				ListeJoueur[i].mise += rand() % ListeJoueur[i].argent;
+			}
+			else {
+				int down_bot = rand() % ListeJoueur[i].argent;
+					ListeJoueur[i].mise -= down_bot;
+					ListeJoueur[i].argent += down_bot;
+			}
 		}
 	}
 }
-int verifDD(Joueur* ListeJoueur, int lance, int* point, int first) {
+int verifDD(Joueur* ListeJoueur, int lance, int* point, int first, int mode_jeu) {
 	if (lance == *point) {
 		int i = 0;
 		for (i; i < 6; i++) {
@@ -237,7 +274,7 @@ int verifDD(Joueur* ListeJoueur, int lance, int* point, int first) {
 			}
 			ListeJoueur[i].mise = 0;
 		}
-		if (continuer() == 1) {
+		if (continuer(mode_jeu) == 1) {
 			return 1;
 		}
 		else {
@@ -253,7 +290,7 @@ int verifDD(Joueur* ListeJoueur, int lance, int* point, int first) {
 			}
 			ListeJoueur[j].mise = 0;
 		}
-		if (continuer() == 1) {
+		if (continuer(mode_jeu) == 1) {
 			return 1;
 		}
 		else {
@@ -264,9 +301,27 @@ int verifDD(Joueur* ListeJoueur, int lance, int* point, int first) {
 		return 2;
 	}
 }
-void miseDD(Joueur* ListeJoueur, int first) {
+void miseDD(Joueur* ListeJoueur, int first, int mode_jeu, int nb_joueur) {
+	
 	if (first == 1) {
 		int reponse;
+		if (mode_jeu == 2) {
+			int k = 0;
+			for (k;k < nb_joueur;k++) {
+				if ((2 * ListeJoueur[k].mise) < (ListeJoueur[k].argent)) {
+					printf("%s, voulez-vous doubler votre mise ?\n1.Oui\n2.Non\n\n", ListeJoueur[k].nom);
+					scanf("%d", &reponse);
+					if (reponse == 1) {
+						ListeJoueur[k].argent -= ListeJoueur[k].mise;
+						ListeJoueur[k].mise += ListeJoueur[k].mise;
+					}
+				}
+				else {
+					printf("Vous ne pouvez pas miser plus que votre argent !");
+				}
+			}
+		}
+		if(mode_jeu == 1){
 		if ((2 * ListeJoueur[0].mise) < (ListeJoueur[0].argent)) {
 			printf("Voulez-vous doubler votre mise ?\n1.Oui\n2.Non\n\n");
 			scanf("%d", &reponse);
@@ -281,67 +336,97 @@ void miseDD(Joueur* ListeJoueur, int first) {
 			printf("Vous ne pouvez pas miser plus que votre argent !");
 		}
 		int i = 1;
-		for (i; i < 6;i++) {
-			int random = rand() % 2;
-			if ((random == 1) && ((2 * ListeJoueur[i].mise) < ListeJoueur[i].argent)) {
-				ListeJoueur[i].argent -= ListeJoueur[i].mise;
-				ListeJoueur[i].mise += ListeJoueur[i].mise;
+		
+			for (i; i < 6;i++) {
+				int random = rand() % 2;
+				if ((random == 1) && ((2 * ListeJoueur[i].mise) < ListeJoueur[i].argent)) {
+					ListeJoueur[i].argent -= ListeJoueur[i].mise;
+					ListeJoueur[i].mise += ListeJoueur[i].mise;
+				}
 			}
 		}
 	}
 	else {
 		int reponse1;
-		printf("Voulez-vous diviser votre mise par 2?\n1.Oui\n2.Non\n\n");
-		scanf("%d", &reponse1);
-		
-		if (reponse1 == 1) {
-			ListeJoueur[0].argent += ListeJoueur[0].mise/2;
-			ListeJoueur[0].mise -= ListeJoueur[0].mise/2;
-			first = 2;
+		if (mode_jeu == 2) {
+			int q = 0;
+			for (q;q < nb_joueur;q++) {
+				printf("%s, voulez-vous diviser votre mise par 2?\n1.Oui\n2.Non\n\n", ListeJoueur[q].nom);
+				scanf("%d", &reponse1);
+
+				if (reponse1 == 1) {
+					ListeJoueur[q].argent += ListeJoueur[q].mise / 2;
+					ListeJoueur[q].mise -= ListeJoueur[q].mise / 2;
+					first = 2;
+				}
+			}
 		}
-		int j = 1;
-		for (j; j < 6;j++) {
-			int random = rand() % 2;
-			if ((random == 1) && ((2 * ListeJoueur[j].mise) < ListeJoueur[j].argent)) {
-				ListeJoueur[j].argent += ListeJoueur[j].mise/2;
-				ListeJoueur[j].mise -= ListeJoueur[j].mise/2;
+		if (mode_jeu == 1) {
+			printf("Voulez-vous diviser votre mise par 2?\n1.Oui\n2.Non\n\n");
+			scanf("%d", &reponse1);
+		
+			if (reponse1 == 1) {
+				ListeJoueur[0].argent += ListeJoueur[0].mise/2;
+				ListeJoueur[0].mise -= ListeJoueur[0].mise/2;
+				first = 2;
+			}
+			int j = 1;
+			for (j; j < 6;j++) {
+				int random = rand() % 2;
+				if ((random == 1) && ((2 * ListeJoueur[j].mise) < ListeJoueur[j].argent)) {
+					ListeJoueur[j].argent += ListeJoueur[j].mise / 2;
+					ListeJoueur[j].mise -= ListeJoueur[j].mise / 2;
+				}
 			}
 		}
 	}
-	printf("#####################\n#Vous avez mise %d \n", ListeJoueur[0].mise);
-	int w = 1;
-	for (w; w < 6; w++) {
-		int mise_ordi = rand() % ListeJoueur[w].argent;
-		ListeJoueur[w].mise += mise_ordi;
-		ListeJoueur[w].argent -= mise_ordi;
-		printf("#%s a mise %d\n", ListeJoueur[w].nom, ListeJoueur[w].mise);
+	if (mode_jeu == 2) {
+		int g = 0;
+		for (g;g < nb_joueur;g++) {
+			printf("%s, vous avez mise %d \n", ListeJoueur[g].nom,ListeJoueur[g].mise);
+		}
+	}
+	if (mode_jeu == 1) {
+		printf("#####################\n#Vous avez mise %d \n", ListeJoueur[0].mise);
+		int w = 1;
+		for (w; w < 6; w++) {
+			int mise_ordi = rand() % ListeJoueur[w].argent;
+			ListeJoueur[w].mise += mise_ordi;
+			ListeJoueur[w].argent -= mise_ordi;
+			printf("#%s a mise %d\n", ListeJoueur[w].nom, ListeJoueur[w].mise);
+		}
 	}
 	printf("#####################\n\n");
 }
-int etape2(Joueur* ListeJoueur, int* point) {
+int etape2(Joueur* ListeJoueur, int* point, int mode_jeu, int nb_joueur) {
 	int encore = 1;
 	int first = 0;
 	while (encore) {
 		if (first == 0) {
-			misedeux(ListeJoueur);
+			misedeux(ListeJoueur, mode_jeu, nb_joueur);
 			first++;
 		}
 		else {
-			miseDD(ListeJoueur, first);
+			miseDD(ListeJoueur, first, mode_jeu, nb_joueur);
 			first++;
 		}
 		int lance = lanceD();
-		if (verifDD(ListeJoueur, lance, point, first) == 0) {
+		if (verifDD(ListeJoueur, lance, point, first, mode_jeu) == 0) {
 			return 0;
 		}
-		if (verifDD(ListeJoueur, lance, point, first) == 1) {
+		if (verifDD(ListeJoueur, lance, point, first, mode_jeu) == 1) {
 			break;
 		}
 	}
 	return 1;
 }
-int continuer() {
-	printf("Voulez-vous rejouer ?\n\n");
+int continuer(int mode_jeu) {
+	if (mode_jeu == 1) {
+		printf("Voulez-vous rejouer ?\n\n");
+	}
+	else {
+		printf("Voulez-vous tous rejouer ?\n\n");
+	}
 	char test[4];
 	while ((getchar()) != '\n');
 	fgets(test, sizeof(test), stdin);
