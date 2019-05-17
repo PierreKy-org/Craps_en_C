@@ -48,7 +48,8 @@ int main(void)
 				ListeJoueur[i].argent = 1000;
 				ListeJoueur[i].mise = 0;
 			}
-			etape1(ListeJoueur, 1, 6);			
+			etape1(ListeJoueur, 1, 6);
+			free(ListeJoueur);
 			break;
 
 		case '2':
@@ -69,6 +70,7 @@ int main(void)
 				ListeJoueur[j] = *j1;
 			}
 			etape1(ListeJoueur, 2, nb_joueur);
+			free(ListeJoueur);
 			break;
 
 		case '3':

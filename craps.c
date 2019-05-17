@@ -4,6 +4,56 @@
 #include<math.h>
 #include<string.h>
 #include"craps.h"
+
+void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
+	Joueur best = tri_score(ListeJoueur, nb_joueur);
+	char nom[10][20];
+	int score[10];
+	FILE* fichier = NULL;
+	fichier = fopen("highscore.txt", "r");
+	if (fichier == NULL) {
+		int fclose(fichier);
+		fichier = fopen("highscore.txt", "w");
+	}
+	fseek(fichier, 0, SEEK_END);
+	int nb= ftell(fichier);
+	if(nb == 0) {
+		int fclose(fichier);
+		fichier = fopen("highscore.txt", "w");
+		printf("ALLOOOOOOOOOOOOOOOOOOOOOOOO");
+		printf("%s - %d", best.nom, best.argent);
+		fprintf(fichier, "%s - %d", best.nom, best.argent);
+	}
+	else {
+		int fclose(fichier);
+		fichier = fopen("highscore.txt", "r");
+		fseek(fichier, 0, SEEK_END);
+		int fin = ftell(fichier);
+		fseek(fichier, 0, SEEK_SET);
+		printf("ALHUILE LOL\n");
+		int w = 0;
+		while (ftell(fichier) != fin) {
+			fscanf(fichier, "%s - %d", nom[w], &score[w]);
+			printf("%s - %d \n", nom[w], score[w]);
+			w++;
+		}
+	}
+	int fclose(fichier);
+}
+
+
+Joueur tri_score(Joueur* ListeJoueur,int nb_joueur) {
+	int max = ListeJoueur[0].argent;
+	int qui = 0;
+	int i = 1;
+	for (i; i < nb_joueur;i++) {
+		if (ListeJoueur[i].argent > max) {
+			max = ListeJoueur[i].argent;
+			qui = i;
+		}
+	}
+	return ListeJoueur[qui];
+}
 void montre_argent(Joueur* ListeJoueur, int mode_jeu, int nb_joueur) {
 		int j = 0;
 		for (j;j < nb_joueur;j++) {
@@ -26,14 +76,15 @@ int verifD(Joueur* ListeJoueur, int lance, int mode_jeu, int nb_joueur) {
 		for (i; i < 6; i++) {
 			if (ListeJoueur[i].choix == 1) {
 				ListeJoueur[i].argent += ListeJoueur[i].mise * 2;
-
 			}
 			ListeJoueur[i].mise = 0;
 		}
 		if (continuer(mode_jeu) == 1) {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 1;
 		}
 		else {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 0;
 		}
 	}
@@ -47,9 +98,11 @@ int verifD(Joueur* ListeJoueur, int lance, int mode_jeu, int nb_joueur) {
 			ListeJoueur[j].mise = 0;
 		}
 		if (continuer(mode_jeu) == 1) {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 1;
 		}
 		else {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 0;
 		}
 	}
@@ -61,9 +114,11 @@ int verifD(Joueur* ListeJoueur, int lance, int mode_jeu, int nb_joueur) {
 			}
 		}
 		if (continuer(mode_jeu) == 1) {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 1;
 		}
 		else {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 0;
 		}
 	}
@@ -264,7 +319,7 @@ void misedeux(Joueur* ListeJoueur, int mode_jeu, int nb_joueur) {
 		}
 	}
 }
-int verifDD(Joueur* ListeJoueur, int lance, int* point, int first, int mode_jeu) {
+int verifDD(Joueur* ListeJoueur, int lance, int* point, int first, int mode_jeu, int nb_joueur) {
 	if (lance == *point) {
 		int i = 0;
 		for (i; i < 6; i++) {
@@ -272,12 +327,15 @@ int verifDD(Joueur* ListeJoueur, int lance, int* point, int first, int mode_jeu)
 				ListeJoueur[i].argent += ListeJoueur[i].mise * 2;
 
 			}
+			
 			ListeJoueur[i].mise = 0;
 		}
 		if (continuer(mode_jeu) == 1) {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 1;
 		}
 		else {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 0;
 		}
 	}
@@ -291,13 +349,16 @@ int verifDD(Joueur* ListeJoueur, int lance, int* point, int first, int mode_jeu)
 			ListeJoueur[j].mise = 0;
 		}
 		if (continuer(mode_jeu) == 1) {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 1;
 		}
 		else {
+			fichier_to_fichier(ListeJoueur, nb_joueur);
 			return 0;
 		}
 	}
 	else {
+
 		return 2;
 	}
 }
@@ -411,10 +472,10 @@ int etape2(Joueur* ListeJoueur, int* point, int mode_jeu, int nb_joueur) {
 			first++;
 		}
 		int lance = lanceD();
-		if (verifDD(ListeJoueur, lance, point, first, mode_jeu) == 0) {
+		if (verifDD(ListeJoueur, lance, point, first, mode_jeu, nb_joueur) == 0) {
 			return 0;
 		}
-		if (verifDD(ListeJoueur, lance, point, first, mode_jeu) == 1) {
+		if (verifDD(ListeJoueur, lance, point, first, mode_jeu, nb_joueur) == 1) {
 			break;
 		}
 	}
