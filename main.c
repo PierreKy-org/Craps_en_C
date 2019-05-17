@@ -36,6 +36,7 @@ int main(void)
 			printf("Entrez votre nom : ");
 			scanf("%s", j1->nom);
 			j1->argent = 1000;
+			j1->mise = 0;
 			ListeJoueur[0] = *j1;
 			for (int i = 1; i < 6; i++) {
 				Joueur* ordi;
@@ -44,19 +45,28 @@ int main(void)
 				strcpy(ordi->nom, NomOrdi[ale]);
 				ListeJoueur[i] = *ordi;
 				ListeJoueur[i].argent = 1000;
+				ListeJoueur[i].mise = 0;
 			}
-			printf("Une nouvelle partie vient de demarrer %s ! \n\n", ListeJoueur[0].nom);
-			printf("Vous jouez avec %s, %s, %s, %s et %s.\n\n", ListeJoueur[1].nom, ListeJoueur[2].nom, ListeJoueur[3].nom, ListeJoueur[4].nom, ListeJoueur[5].nom);
-			miser(ListeJoueur);
-			int lance = lanceD();
-			verifD(ListeJoueur, lance, ListeJoueur[0].mise);
-			printf("T'as %d d'argent\n", ListeJoueur[0].argent);
-			system("pause");
-			fin = 1;
+			etape1(ListeJoueur, 1, 6);			
 			break;
 
 		case '2':
-			printf("Multijoueur\n\n");
+			printf("Combien de joueur ?\n\n");
+			int nb_joueur;
+			scanf("%d", &nb_joueur);
+			while (getchar()!='\n');
+			printf("Il y a donc %d joueurs dans cette partie\n\n", nb_joueur);
+			ListeJoueur = (Joueur*)malloc(nb_joueur * sizeof(Joueur));
+			for (int i = 0; i < nb_joueur; i++) {
+				Joueur* j1;
+				j1 = (Joueur*)malloc(sizeof(Joueur));
+				printf("Entrez le nom du joueur %d: ", (i+1));
+				scanf("%s", j1->nom);
+				j1->argent = 1000;
+				j1->mise = 0;
+				ListeJoueur[i] = *j1;
+			}
+			etape1(ListeJoueur, 2, nb_joueur);
 			break;
 
 		case '3':
