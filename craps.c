@@ -20,8 +20,7 @@ void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
 	if(nb == 0) {
 		int fclose(fichier);
 		fichier = fopen("highscore.txt", "w");
-		printf("ALLOOOOOOOOOOOOOOOOOOOOOOOO");
-		printf("%s - %d", best.nom, best.argent);
+		printf("%s - %d\n", best.nom, best.argent);
 		fprintf(fichier, "%s - %d", best.nom, best.argent);
 	}
 	else {
@@ -30,13 +29,38 @@ void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
 		fseek(fichier, 0, SEEK_END);
 		int fin = ftell(fichier);
 		fseek(fichier, 0, SEEK_SET);
-		printf("ALHUILE LOL\n");
 		int w = 0;
 		while (ftell(fichier) != fin) {
 			fscanf(fichier, "%s - %d", nom[w], &score[w]);
-			printf("%s - %d \n", nom[w], score[w]);
 			w++;
 		}
+		strcpy(nom[w],best.nom);
+		score[w] = best.argent;
+		int fclose(fichier);
+		int k = 0;
+		int j = 0;
+		int temp;
+		char tempo[20];
+		for (k = 0; k < (w+1); k++) {
+			for (j = 0; j < (w); j++) {
+				if (score[j] < score[j + 1]) {
+					strcpy(tempo, nom[j+1]);
+					strcpy(nom[j+1], nom[j]);
+					strcpy(nom[j], tempo);
+					temp = score[j+1];
+					score[j+1] = score[j];
+					score[j] = temp;
+				}
+			}
+		}
+		fichier = fopen("highscore.txt", "w+");
+		int i = 0;
+		while(i< (w+1)){
+			fprintf(fichier, "%s - %d", nom[i], score[i]);
+			i++;
+		}
+		int fclose(fichier);
+		
 	}
 	int fclose(fichier);
 }

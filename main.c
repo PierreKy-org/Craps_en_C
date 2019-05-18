@@ -75,10 +75,24 @@ int main(void)
 
 		case '3':
 			printf("Highscore\n\n");
+			FILE* fichier = NULL;
+			char nom[10][20];
+			int score[10];
+			fichier = fopen("highscore.txt", "r");
+			fseek(fichier, 0, SEEK_END);
+			int fin = ftell(fichier);
+			fseek(fichier, 0, SEEK_SET);
+			int w = 0;
+			while (ftell(fichier) != fin) {
+				fscanf(fichier, "%s - %d", nom[w], &score[w]);
+				printf("%s - %d \n", nom[w], score[w]);
+				w++;
+			}
+			int fclose(fichier);
 			break;
 
 		case '4':
-			fin = 1;
+			exit(0);
 			break;
 
 		default:
