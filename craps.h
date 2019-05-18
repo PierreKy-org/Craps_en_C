@@ -6,6 +6,7 @@ struct Joueur {
 	int en_train_de_jouer;
 	int choix;
 };
+void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur);
 int lanceD();
 int miser(Joueur* ListeJoueur, int mode_jeu, int nb_joueur);
 int verifD(Joueur* ListeJoueur, int lance, int mode_jeu, int nb_joueur);

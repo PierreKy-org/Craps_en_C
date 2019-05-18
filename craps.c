@@ -12,19 +12,18 @@ void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
 	FILE* fichier = NULL;
 	fichier = fopen("highscore.txt", "r");
 	if (fichier == NULL) {
-		int fclose(fichier);
+		fclose(fichier);
 		fichier = fopen("highscore.txt", "w");
 	}
 	fseek(fichier, 0, SEEK_END);
 	int nb= ftell(fichier);
 	if(nb == 0) {
-		int fclose(fichier);
+		fclose(fichier);
 		fichier = fopen("highscore.txt", "w");
-		printf("%s - %d\n", best.nom, best.argent);
 		fprintf(fichier, "%s - %d", best.nom, best.argent);
 	}
 	else {
-		int fclose(fichier);
+		fclose(fichier);
 		fichier = fopen("highscore.txt", "r");
 		fseek(fichier, 0, SEEK_END);
 		int fin = ftell(fichier);
@@ -36,7 +35,7 @@ void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
 		}
 		strcpy(nom[w],best.nom);
 		score[w] = best.argent;
-		int fclose(fichier);
+		fclose(fichier);
 		int k = 0;
 		int j = 0;
 		int temp;
@@ -59,13 +58,11 @@ void fichier_to_fichier(Joueur* ListeJoueur, int nb_joueur) {
 			fprintf(fichier, "%s - %d", nom[i], score[i]);
 			i++;
 		}
-		int fclose(fichier);
+		fclose(fichier);
 		
 	}
-	int fclose(fichier);
+	fclose(fichier);
 }
-
-
 Joueur tri_score(Joueur* ListeJoueur,int nb_joueur) {
 	int max = ListeJoueur[0].argent;
 	int qui = 0;

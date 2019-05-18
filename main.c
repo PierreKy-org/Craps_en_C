@@ -88,7 +88,7 @@ int main(void)
 				printf("%s - %d \n", nom[w], score[w]);
 				w++;
 			}
-			int fclose(fichier);
+			fclose(fichier);
 			break;
 
 		case '4':
